@@ -1,0 +1,14 @@
+--
+-- ノートテーブル作成
+--
+CREATE TABLE IF NOT EXISTS notes (
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'ノートID',
+    user_id INT(11) NOT NULL COMMENT 'ユーザーID',
+    title VARCHAR(100) NOT NULL COMMENT '件名',
+    content TEXT NOT NULL COMMENT '本文',
+    open_code INT(1) NOT NULL DEFAULT 0 COMMENT '公開範囲コード(0:自分,1:プロジェクト,2:チーム,3:全て)',
+    project_id INT(11) COMMENT 'プロジェクトID',
+    task_id INT(11) COMMENT 'タスクID',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日時',
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時'
+);

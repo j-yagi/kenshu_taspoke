@@ -1,0 +1,12 @@
+--
+-- タスク作業時間テーブル作成
+--
+CREATE TABLE IF NOT EXISTS task_working_times (
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '作業時間計測ID',
+    task_id INT(11) NOT NULL COMMENT 'タスクID',
+    user_id INT(11) NOT NULL COMMENT 'ユーザーID',
+    elapsed_time TIME NOT NULL DEFAULT 0 COMMENT '経過時間',
+    stopped_at TIMESTAMP COMMENT '停止日時',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日時',
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新日時'
+);

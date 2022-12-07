@@ -1,0 +1,11 @@
+{
+  "config": {
+    "vendor-dir": "lib"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "*"
+  },
+  "require": {
+    "danrovito/pokephp": "^1.3"
+  }
+}

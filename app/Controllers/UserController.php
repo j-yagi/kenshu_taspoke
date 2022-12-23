@@ -224,8 +224,6 @@ class UserController extends Controller
 
         return $validation;
     }
-<<<<<<< HEAD
-=======
     /**
      * アカウント情報更新画面
      * 
@@ -239,9 +237,9 @@ class UserController extends Controller
 
         // idの取得
         $id = Auth::getUserId();
-        $result = User::updateacc($name, $email, h($password), $id);
+        // $result = User::updateacc($name, $email, h($password), $id);
 
-        return $result;
+        // return $result;
 
         // バリデーションチェック
         $data = Request::getPost();
@@ -279,5 +277,4 @@ class UserController extends Controller
 
         return $validation;
     }
->>>>>>> b4a23ee (update)
 }

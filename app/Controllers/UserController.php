@@ -224,4 +224,60 @@ class UserController extends Controller
 
         return $validation;
     }
+<<<<<<< HEAD
+=======
+    /**
+     * アカウント情報更新画面
+     * 
+     * @return $result
+     */
+
+    public function edit(string $name, string $email, string $password)
+    {
+        $errors = [];
+        $old = [];
+
+        // idの取得
+        $id = Auth::getUserId();
+        $result = User::updateacc($name, $email, h($password), $id);
+
+        return $result;
+
+        // バリデーションチェック
+        $data = Request::getPost();
+        $validation = $this->editDataValidation($data);
+        if ($validation->hasError()) {
+            $errors = $validation->getErrors();
+            $old = $data;
+        } else {
+            // 更新してアカウント情報画面へ
+            $this->redirect('/account/index.php');
+        }
+        return compact('errors', 'old');
+    }
+
+    /**
+     * 更新情報のバリデーションチェック
+     * 
+     * @param array $data
+     * @return Validation
+     */
+    private function editDataValidation(array $data): Validation
+    {
+        $validation = new Validation();
+
+        // メールアドレス
+        $validation
+            ->required('email', $data['email'])
+            ->email('email', $data['email'])
+            ->length('email', $data['email'], 255);
+        // パスワード
+        $validation
+            ->required('password', $data['password'])
+            ->length('password', $data['password'], null, 8)
+            ->alphanumeric('password', $data['password']);
+
+        return $validation;
+    }
+>>>>>>> b4a23ee (update)
 }

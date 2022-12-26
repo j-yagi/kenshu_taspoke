@@ -227,31 +227,58 @@ class UserController extends Controller
     /**
      * アカウント情報更新画面
      * 
-     * @return $result
+     * @return 
      */
 
-    public function edit(string $name, string $email, string $password)
+    public function edit(): array
     {
-        $errors = [];
-        $old = [];
-
         // idの取得
         $id = Auth::getUserId();
-        // $result = User::updateacc($name, $email, h($password), $id);
 
-        // return $result;
+        $data = Request::getPost();
+        var_dump($data);
+        
+        // idを使用しnameを取得
+        $user = User::findOrNew($id);
+        $errors = Session::pull('errors', []);
+        // この時点では空配列
+        var_dump($errors);
+
+        $old = Session::pull('old', []);
 
         // バリデーションチェック
         $data = Request::getPost();
         $validation = $this->editDataValidation($data);
         if ($validation->hasError()) {
-            $errors = $validation->getErrors();
+            // $errors = $validation->getErrors();
+            // var_dump($errors);
             $old = $data;
+            
         } else {
-            // 更新してアカウント情報画面へ
-            $this->redirect('/account/index.php');
+            if ($validation->hasError()) {
+                // バリデーションエラーがあった場合
+                Session::set('errors', $validation->getErrors());
+                Session::set('old', $data);
+
+                // 再送信が発生しないよう自ページにリダイレクトする
+                $this->redirect(Request::getCurrentUri());
+            } else {
+                // エラーがない場合、DB登録
+                DB::begin();
+
+                // アカウント情報更新
+                // $user = new User($data);
+                $user->fill($data);
+                $user->update();
+
+                DB::commit();
+
+                // 更新してアカウント情報画面へ
+                $this->redirect('/account/index.php');
+            }
+            
         }
-        return compact('errors', 'old');
+        return compact('user','errors', 'old');
     }
 
     /**
@@ -264,6 +291,10 @@ class UserController extends Controller
     {
         $validation = new Validation();
 
+        // 名前
+        $validation
+            ->required('name', $data['name'])
+            ->length('name', $data['name'], 20);
         // メールアドレス
         $validation
             ->required('email', $data['email'])

@@ -40,6 +40,12 @@ $current_uri = Request::getCurrentUri();
             </a>
         </li>
         <li>
+            <a href="/account" class="nav-link <?= strpos($current_uri, '/account') === 0 ? $active : $inactive ?>">
+                <i class="fa-solid fa-book fs-5 text-primary"></i>
+                <span class="ms-2">マイアカウント</span>
+            </a>
+        </li>
+        <li>
             <form name="user.logout" method="POST" action="/user/logout.php">
                 <input type="hidden" name="_token" value="<?= Request::generateCsrfToken('user.logout') ?>">
                 <a href="javascript:void(0);" class="nav-link link-dark" onclick="document.forms['user.logout'].submit()">

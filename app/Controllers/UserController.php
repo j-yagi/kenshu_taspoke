@@ -234,26 +234,19 @@ class UserController extends Controller
     {
         // idの取得
         $id = Auth::getUserId();
-
-        $data = Request::getPost();
-        var_dump($data);
+        // idを使用しデータを取得
+        $user = User::find($id);
         
-        // idを使用しnameを取得
-        $user = User::findOrNew($id);
-        $errors = Session::pull('errors', []);
-        // この時点では空配列
-        var_dump($errors);
-
-        $old = Session::pull('old', []);
+        $errors = Session::get('errors', []);
+        $old = Session::get('old', []);
 
         // バリデーションチェック
         $data = Request::getPost();
+        var_dump($data);
         $validation = $this->editDataValidation($data);
         if ($validation->hasError()) {
-            // $errors = $validation->getErrors();
-            // var_dump($errors);
+            $errors = $validation->getErrors();
             $old = $data;
-            
         } else {
             if ($validation->hasError()) {
                 // バリデーションエラーがあった場合
@@ -267,19 +260,22 @@ class UserController extends Controller
                 DB::begin();
 
                 // アカウント情報更新
-                // $user = new User($data);
+                // Userクラスインスタンスを使用し、
+                // テキストボックスに現在のユーザー情報を初期表示する
+                $user = new User($data);
                 $user->fill($data);
-                $user->update();
+                $user-> update();
 
                 DB::commit();
 
                 // 更新してアカウント情報画面へ
-                $this->redirect('/account/index.php');
+                $this->redirect('/account');
             }
-            
         }
-        return compact('user','errors', 'old');
+        return compact('user','old','errors');
     }
+
+    
 
     /**
      * 更新情報のバリデーションチェック
@@ -300,6 +296,7 @@ class UserController extends Controller
             ->required('email', $data['email'])
             ->email('email', $data['email'])
             ->length('email', $data['email'], 255);
+            // ->unique('email', $data['email'], 'users', 'email');
         // パスワード
         $validation
             ->required('password', $data['password'])

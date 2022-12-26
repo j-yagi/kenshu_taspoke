@@ -81,7 +81,6 @@ $title = 'プロジェクト' . (Request::getParam('id') ? '更新' : '登録');
                     <a href="<?= Request::getParam('ref') ?: '/project' ?>" class="btn btn-secondary">戻る</a>
                     <button type="submit" class="btn btn-primary">登録</button>
                 </div>
-
             </form>
         </div>
     </div>

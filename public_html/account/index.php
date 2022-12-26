@@ -17,8 +17,9 @@ $ctrl = new UserController();
 // ・ログインユーザーのIDで生成したModels/Userクラスインスタンス
 // ・各項目のバリデーションエラーメッセージ（バリデーションエラーがなかった場合、空配列）
 // ・各項目の入力値（バリデーションエラーがなかった場合、空配列）
-extract($ctrl->edit());
-// 
+$date = [];
+$data = $ctrl->edit();
+
 $title = 'アカウント更新';
 
 ?>
@@ -37,15 +38,15 @@ $title = 'アカウント更新';
 
         <div class="container p-3">
             <h2 class="fs-4 mb-4"><?= $title ?></h2>
-            <form action="" method="post">
+            <form name='user.edit' action="" method="post">
                     <div class="mb-3">
                     <label for="name" class="form-label">
                         <span class="text-danger">*</span> アカウント名
                     </label>
                     <?php if (!isset($errors['name'])) : ?>
-                        <input type="text" name="name" class="form-control" id="name" value="<?= h($old['name'] ?? $user->name) ?>">
+                        <input type="text" name="name" class="form-control" id="name" value="<?= h($old['name'] ?? $project->name) ?>">
                     <?php else : ?>
-                        <input type="text" name="name" class="form-control is-invalid" id="name" value="<?= h($old['name'] ?? $user->name) ?>">
+                        <input type="text" name="name" class="form-control is-invalid" id="name" value="<?= h($old['name'] ?? $project->name) ?>">
                         <div class="invalid-feedback">
                             <?php foreach ($errors['name'] as $message) : ?>
                                 <div><?= $message ?></div>
@@ -58,9 +59,9 @@ $title = 'アカウント更新';
                         <span class="text-danger">*</span> メールアドレス
                     </label>
                     <?php if (!isset($errors['email'])) : ?>
-                        <input type="text" email="email" class="form-control" id="email" value="<?= h($old['email'] ?? $user->email) ?>">
+                        <input type="text" email="email" class="form-control" id="email" value="<?= h($data['email']) ?>">
                     <?php else : ?>
-                        <input type="text" email="email" class="form-control is-invalid" id="email" value="<?= h($old['email'] ?? $user->email) ?>">
+                        <input type="text" email="email" class="form-control is-invalid" id="email" value="<?= h($data['email']) ?>">
                         <div class="invalid-feedback">
                             <?php foreach ($errors['email'] as $message) : ?>
                                 <div><?= $message ?></div>
@@ -73,9 +74,9 @@ $title = 'アカウント更新';
                         <span class="text-danger">*</span> パスワード
                     </label>
                     <?php if (!isset($errors['password'])) : ?>
-                        <input type="password" password="password" class="form-control" id="password" value="<?= h($old['password'] ?? $user->password) ?>">
+                        <input type="password" password="password" class="form-control" id="password" value="<?= h($data['password']) ?>">
                     <?php else : ?>
-                        <input type="password" password="password" class="form-control is-invalid" id="password" value="<?= h($old['password'] ?? $user->password) ?>">
+                        <input type="password" password="password" class="form-control is-invalid" id="password" value="<?= h($data['password']) ?>">
                         <div class="invalid-feedback">
                             <?php foreach ($errors['password'] as $message) : ?>
                                 <div><?= $message ?></div>
@@ -83,8 +84,10 @@ $title = 'アカウント更新';
                         </div>
                     <?php endif; ?>
                 </div>
-                    <button type="button">戻る</button>
-                    <button type="submit">更新</button>
+                <div class="flex">
+                    <a href="<?= '/account' ?>" class="btn btn-secondary">戻る</a>
+                    <button type="submit" class="btn btn-primary">更新</button>
+                </div>
             </form>
         </div>
     </div>

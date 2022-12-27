@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * ユーザー管理画面コントローラー
  * 
@@ -234,74 +235,45 @@ class UserController extends Controller
     {
         Auth::guard();
 
-        $id = Auth::getUserId();
-        $user = User::find($id);
+        $user = User::find(Auth::getUserId());
 
-        $errors = Session::get('errors', []);
-        $old = Session::get('old', []);
+        $errors = Session::pull('errors', []);
+        $old = Session::pull('old', []);
 
-            // バリデーションチェック
+        // バリデーションチェック
+        if (Request::isPost()) {
             $data = Request::getPost();
-            $validation = $this->editDataValidation($data);
+            var_dump($data['name']);
+            var_dump($data['email']);
+            // セッションに格納
+            Session::set('form_data.user.edit', $data);
+            $validation = $this->registerDataValidation($data);
+
             if ($validation->hasError()) {
-                // バリデーションエラーがあった場合
+
+                // エラーがあった場合、エラー内容を保存して登録画面にリダイレクト
                 Session::set('errors', $validation->getErrors());
                 Session::set('old', $data);
 
-                // 前画面にリダイレクト
-                $this->redirect('/user/updata.php');
-            } else {
-                // エラーがない場合、DB登録
-                DB::begin();
+                // $this->redirect(Request::getParam('ref') ?: '/account');
+            }
+        } else {
+            // エラーがない場合、DB登録
+            DB::begin();
 
-                $user = new User($data);
-                var_dump($data);
-                $data->fill($data);
-                $data->upsert();
-
-                $params = [
-                    'id' => Auth::getUserId(),
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'password' => $user->password
-                ];
-
-                DB::commit();
-
-                // 前画面にリダイレクト
-                $this->redirect('/account');
+            // プロジェクト情報登録
+            // $project = new Project($data);
+            if (isset($data)){
+            $user->fill($data);
+            $user->update();
             }
 
-            return compact('user','errors','old');
+            DB::commit();
+
+            // 前画面にリダイレクト
+            // $this->redirect(Request::getParam('ref') ?: '/account');
         }
 
-        /**
-     * アカウント登録情報のバリデーションチェック
-     *
-     * @param array $data
-     * @return Validation
-     */
-    private function editDataValidation(array $data): Validation
-    {
-        $validation = new Validation();
-
-        // 名前
-        $validation
-            ->required('name', $_POST['name'])
-            ->length('name', $data['name'], 20);
-        // メールアドレス
-        $validation
-            ->required('email', $data['email'])
-            ->email('email', $data['email'])
-            ->length('email', $data['email'], 255)
-            ->unique('email', $data['email'], 'users', 'email');
-        // パスワード
-        $validation
-            ->required('password', $data['password'])
-            ->length('password', $data['password'], null, 8)
-            ->alphanumeric('password', $data['password']);
-
-        return $validation;
+        return compact('user', 'errors', 'old');
     }
-
-    }
+}

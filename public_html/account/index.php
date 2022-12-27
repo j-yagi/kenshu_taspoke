@@ -1,4 +1,5 @@
-<?php
+<?php 
+// ini_set( 'display_errors', 1 );
 
 /**
  * マイアカウント画面
@@ -11,6 +12,9 @@ require_once ROOT_DIR . '/app/Controllers/UserController.php';
 
 $ctrl = new UserController();
 $ctrl->edit();
+
+$errors = Session::get('errors');
+$old = Session::get('old');
 
 $title = 'アカウント更新';
 ?>
@@ -35,9 +39,9 @@ $title = 'アカウント更新';
                         <span class="text-danger">*</span> アカウント名
                     </label>
                     <?php if (!isset($errors['name'])) : ?>
-                        <input type="text" name="name" class="form-control" id="name" value="<?= h($old['name'] ?? $user->name) ?>">
+                        <input type="text" name="name" class="form-control" id="name" value="<?= $old['name'] ?? $user->name ?>">
                     <?php else : ?>
-                        <input type="text" name="name" class="form-control is-invalid" id="name" value="<?= h($old['name'] ?? $user->name) ?>">
+                        <input type="text" name="name" class="form-control is-invalid" id="name" value="<?= $old['name'] ?? $user->name ?>">
                         <div class="invalid-feedback">
                             <?php foreach ($errors['name'] as $message) : ?>
                                 <div><?= $message ?></div>
@@ -50,9 +54,9 @@ $title = 'アカウント更新';
                         <span class="text-danger">*</span> メールアドレス
                     </label>
                     <?php if (!isset($errors['email'])) : ?>
-                        <input type="text" email="email" class="form-control" id="email" value="<?= h($old['email'] ?? $user->email) ?>">
+                        <input type="email" name="email" class="form-control" id="email" value="<?= h($old['email'] ?? $user->email) ?>">
                     <?php else : ?>
-                        <input type="text" email="email" class="form-control is-invalid" id="email" value="<?= h($old['email'] ?? $user->email) ?>">
+                        <input type="email" name="email" class="form-control is-invalid" id="email" value="<?= h($old['email'] ?? $user->email) ?>">
                         <div class="invalid-feedback">
                             <?php foreach ($errors['email'] as $message) : ?>
                                 <div><?= $message ?></div>
@@ -65,9 +69,9 @@ $title = 'アカウント更新';
                         <span class="text-danger">*</span> パスワード
                     </label>
                     <?php if (!isset($errors['password'])) : ?>
-                        <input type="password" password="password" class="form-control" id="password" value="********">
+                        <input type="password" name="password" class="form-control" id="password" >
                     <?php else : ?>
-                        <input type="password" password="password" class="form-control is-invalid" id="password" value="********" >
+                        <input type="password" name="password" class="form-control is-invalid" id="password" >
                         <div class="invalid-feedback">
                             <?php foreach ($errors['password'] as $message) : ?>
                                 <div><?= $message ?></div>
@@ -76,7 +80,7 @@ $title = 'アカウント更新';
                     <?php endif; ?>
                 </div>
                 <div class="flex">
-                <a href="<?= Request::getParam('ref') ?: '/account' ?>" class="btn btn-secondary">戻る</a>
+                <a href="<?= '/account' ?>" class="btn btn-secondary">戻る</a>
                     <button type="submit" class="btn btn-primary">更新</button>
                 </div>
             </form>

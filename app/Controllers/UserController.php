@@ -269,7 +269,7 @@ class UserController extends Controller
                 DB::commit();
 
                 // 更新してアカウント情報画面へ
-                $this->redirect('/account');
+                $this->redirect('/account/index.php');
             }
         }
         return compact('user','old','errors');

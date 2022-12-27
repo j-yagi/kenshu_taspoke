@@ -242,7 +242,7 @@ class UserController extends Controller
 
             // バリデーションチェック
             $data = Request::getPost();
-            $validation = $this->registerDataValidation($data);
+            $validation = $this->editDataValidation($data);
             if ($validation->hasError()) {
                 // バリデーションエラーがあった場合
                 Session::set('errors', $validation->getErrors());
@@ -274,5 +274,34 @@ class UserController extends Controller
 
             return compact('user','errors','old');
         }
+
+        /**
+     * アカウント登録情報のバリデーションチェック
+     *
+     * @param array $data
+     * @return Validation
+     */
+    private function editDataValidation(array $data): Validation
+    {
+        $validation = new Validation();
+
+        // 名前
+        $validation
+            ->required('name', $_POST['name'])
+            ->length('name', $data['name'], 20);
+        // メールアドレス
+        $validation
+            ->required('email', $data['email'])
+            ->email('email', $data['email'])
+            ->length('email', $data['email'], 255)
+            ->unique('email', $data['email'], 'users', 'email');
+        // パスワード
+        $validation
+            ->required('password', $data['password'])
+            ->length('password', $data['password'], null, 8)
+            ->alphanumeric('password', $data['password']);
+
+        return $validation;
+    }
 
     }
